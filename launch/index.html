@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛰️ ISRO Launches Dashboard 🚀</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    background-image: url('https://staticimg.amarujala.com/assets/images/2023/11/18/isro_1700266562.jpeg'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+        header {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            text-align: center;
+        }
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+.card {
+    background: rgba(255, 255, 255, 1); /* 50% transparent white background */
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    padding: 30px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0.8; /* 50% overall transparency */
+}
+
+
+
+        .card h3 {
+            font-size: 24px;
+            color: #34495e;
+            margin-top: 0;
+            font-weight: 600;
+        }
+
+        .summary-box {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 16px;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .total-missions {
+            background-color: #f39c12;
+        }
+
+        .successful-missions {
+            background-color: #2ecc71;
+        }
+
+        .unsuccessful-missions {
+            background-color: #e74c3c;
+        }
+
+        .launch-distribution {
+            display: flex;
+            gap: 20px;
+        }
+
+        .pie-chart {
+            width: 500vw;
+            height: 500vw;
+            max-width: 500px;
+            max-height: 500px;
+        }
+
+        .launch-info {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow: auto;
+            max-height: 400px;
+        }
+
+        .launch-info h4 {
+            margin-top: 0;
+        }
+
+        .bar-chart {
+            width: 100%;
+            height: 350px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .bar-chart canvas {
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #2c3e50;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        #file-input {
+            margin: 20px;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 20px;
+            }
+
+            .bar-chart {
+                height: 250px;
+            }
+        }
+
+
+footer {
+    background-color: #2c3e50;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+    position: relative; /* Normal position, as it's no longer fixed */
+}
+
+footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px;
+    background-color: #2c3e50;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+footer a:hover {
+    background-color: #34495e;
+}
+
+
+
+    </style>
+</head>
+<body>
+<header style="background-color: #2c3e50; color: #ecf0f1; padding: 20px; text-align: center; border-bottom: 3px solid #34495e;">
+    <h1 style="font-size: 36px; margin: 0; font-family: 'Arial', sans-serif; font-weight: 700;">🛰️ ISRO Launches Dashboard 🚀</h1>
+<input type="file" id="file-input" accept=".json" style="margin-top: 20px; padding: 10px; background-color: #2c3e50; border: none; border-radius: 8px; color: #ffffff; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease; display: block; margin-left: auto; margin-right: auto;">
+    <p style="font-size: 14px; color: #bdc3c7;">Upload a JSON file to view space mission data</p>
+</header>
+
+
+    <div class="dashboard">
+        <!-- Mission Summary -->
+        <div class="card" id="mission-summary">
+            <h3>Mission Summary</h3>
+            <p class="summary-box total-missions">Total Missions: <span id="total-missions"></span></p> <br>
+            <p class="summary-box successful-missions">Successful Missions: <span id="successful-missions"></span></p>
+            <p class="summary-box unsuccessful-missions">Unsuccessful Missions: <span id="unsuccessful-missions"></span></p>
+        </div>
+
+        <!-- Launch Type Distribution -->
+        <div class="card">
+            <h3>Launch Type Distribution</h3>
+            <div class="launch-distribution">
+                <canvas id="launchTypeChart" class="pie-chart"></canvas>
+                <div id="launch-info" class="launch-info">
+                    <h4>Launch Details</h4>
+                    <p>Select a segment to view details.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mission Timeline -->
+        <div class="card">
+            <h3>Mission Timeline</h3>
+            <canvas id="missionTimeline" class="bar-chart"></canvas>
+        </div>
+
+        <!-- Launches by Year -->
+        <div class="card">
+            <h3>Launches in Selected Year</h3>
+            <div id="launches-by-year">
+                <p>Select a bar in the chart to view the launches in that year.</p>
+                <ul id="launch-list"></ul>
+            </div>
+        </div>
+
+        <!-- Recent Missions -->
+        <div class="card">
+            <h3>Recent Missions</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Name</th>
+                        <th onclick="sortTable(1)">Launch Date</th>
+                        <th onclick="sortTable(2)">Payload</th>
+                        <th onclick="sortTable(3)">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-missions"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let missionData = [];
+
+        // File Input Handler
+        document.getElementById('file-input').addEventListener('change', event => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    missionData = JSON.parse(e.target.result);
+                    updateDashboard();
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Update Dashboard
+        function updateDashboard() {
+            // Mission Summary
+            const totalMissions = missionData.length;
+            const successfulMissions = missionData.filter(m => m.MissionStatus === "MISSION SUCCESSFUL").length;
+            const unsuccessfulMissions = totalMissions - successfulMissions;
+
+            document.getElementById('total-missions').innerText = totalMissions;
+            document.getElementById('successful-missions').innerText = successfulMissions;
+            document.getElementById('unsuccessful-missions').innerText = unsuccessfulMissions;
+
+            // Recent Missions Table
+            const recentMissions = document.getElementById('recent-missions');
+            recentMissions.innerHTML = '';
+            missionData.forEach(mission => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${mission.Name}</td>
+                    <td>${mission.LaunchDate}</td>
+                    <td>${mission.Payload}</td>
+                    <td>${mission.MissionStatus}</td>
+                `;
+                recentMissions.appendChild(row);
+            });
+
+            // Launch Type Distribution Chart
+            const launchTypes = missionData.reduce((acc, mission) => {
+                acc[mission.LaunchType] = (acc[mission.LaunchType] || 0) + 1;
+                return acc;
+            }, {});
+            const ctx1 = document.getElementById('launchTypeChart').getContext('2d');
+            const launchTypeChart = new Chart(ctx1, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(launchTypes),
+                    datasets: [{
+                        data: Object.values(launchTypes),
+                        backgroundColor: ['#3498db', '#e74c3c', '#f1c40f', '#9b59b6', '#1abc9c', '#2ecc71', '#e67e22', '#ecf0f1', '#34495e', '#16a085'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const chartIndex = elements[0].index;
+                            const selectedLaunchType = Object.keys(launchTypes)[chartIndex];
+                            const filteredMissions = missionData.filter(m => m.LaunchType === selectedLaunchType);
+
+                            const launchInfoDiv = document.getElementById('launch-info');
+                            launchInfoDiv.innerHTML = `<h4>${selectedLaunchType} Launches</h4>`;
+                            filteredMissions.forEach(mission => {
+                                const missionDetails = `
+                                    <p>
+                                        <strong>Name:</strong> ${mission.Name}<br>
+                                        <strong>Launch Date:</strong> ${mission.LaunchDate}<br>
+                                        <strong>Payload:</strong> ${mission.Payload}<br>
+                                        <strong>Status:</strong> ${mission.MissionStatus}<br>
+                                    </p>
+                                    <hr>
+                                `;
+                                launchInfoDiv.innerHTML += missionDetails;
+                            });
+                        }
+                    }
+                }
+            });
+
+            // Mission Timeline Chart (Grouped by Years)
+            const timelineDataByYear = missionData.reduce((acc, mission) => {
+                const year = new Date(mission.LaunchDate).getFullYear();
+                acc[year] = (acc[year] || 0) + 1;
+                return acc;
+            }, {});
+            const sortedYears = Object.keys(timelineDataByYear).sort((a, b) => a - b);
+            const ctx2 = document.getElementById('missionTimeline').getContext('2d');
+            const missionTimelineChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: sortedYears,
+                    datasets: [{
+                        label: 'Number of Missions',
+                        data: sortedYears.map(year => timelineDataByYear[year]),
+                        backgroundColor: '#2ecc71'
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Number of Missions'
+                            },
+                            beginAtZero: true
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const yearClicked = sortedYears[elements[0].index];
+                            const filteredMissions = missionData.filter(mission => new Date(mission.LaunchDate).getFullYear() === parseInt(yearClicked));
+                            const launchesByYearDiv = document.getElementById('launch-list');
+                            launchesByYearDiv.innerHTML = '';
+                            filteredMissions.forEach(mission => {
+                                const listItem = document.createElement('li');
+                                listItem.innerHTML = `${mission.Name} (${mission.LaunchDate})`;
+                                launchesByYearDiv.appendChild(listItem);
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        // Sorting Function for Table
+        function sortTable(n) {
+            const table = document.querySelector('table');
+            const rows = Array.from(table.rows).slice(1);
+            const isAscending = table.rows[0].cells[n].classList.toggle('ascending');
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[n].innerText;
+                const cellB = rowB.cells[n].innerText;
+                if (isNaN(cellA) && isNaN(cellB)) {
+                    return (cellA > cellB ? 1 : -1) * (isAscending ? 1 : -1);
+                }
+                return (parseFloat(cellA) - parseFloat(cellB)) * (isAscending ? 1 : -1);
+            });
+            rows.forEach(row => table.appendChild(row));
+        }
+    </script>
+
+    <footer>
+    <a href="path-to-your-file.json" download="space_mission_data.json" style="color: #ffffff; text-decoration: none; font-size: 16px; padding: 10px; background-color: #2c3e50; border-radius: 8px; margin-top: 20px; display: inline-block; transition: background-color 0.3s ease;">Download Mission Data (.json)</a>
+</footer>
+
+</body>
+</html>
