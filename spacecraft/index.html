@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Mission Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    background-image: url('https://staticimg.amarujala.com/assets/images/2023/11/18/isro_1700266562.jpeg'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+        header {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px;
+            background-color: #2c3e50;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        footer a:hover {
+            background-color: #34495e;
+        }
+
+        #file-input {
+            margin: 20px;
+            display: block;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #1abc9c;
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+
+        #file-input:hover {
+            background-color: #16a085;
+        }
+
+        .chart-container {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+            opacity: 0.8;
+        }
+
+.pie-chart-container {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    height: auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    justify-content: space-between;
+}
+
+.pie-chart-left {
+    width: 35%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pie-chart-right {
+    width: 35%;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.pie-chart-container canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+
+.bar-chart-container {
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: auto;
+}
+
+.bar-chart-top {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Space between bar chart and JSON info */
+}
+
+.bar-chart-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 10px;
+}
+
+.bar-chart-container canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+        #application-chart, #yearly-missions {
+            position: relative;
+        }
+
+        .json-info {
+            position: absolute;
+            top: 0;
+            left: 60%;
+            width: 35%;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .json-info-bar {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .json-info-bar pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        canvas {
+            max-width: 100%;
+            margin: auto;
+        }
+
+/* Card Styling */
+#mission-table-card {
+    margin: 20px auto;
+    max-width: 90%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
+}
+
+.card-header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.card-body {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Table Styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    cursor: pointer;
+    background-color: #3498db;
+    color: white;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #ddd;
+}
+
+/* Hover effect on header */
+.table th:hover {
+    background-color: #2980b9;
+}
+
+/* Details button styling */
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .table th, .table td {
+        padding: 8px;
+    }
+
+    .card-header {
+        font-size: 16px;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Space Mission Dashboard</h1>
+        <input type="file" id="file-input" accept=".json">
+    </header>
+
+    <div class="dashboard">
+        <!-- Total, Successful, Unsuccessful Missions -->
+        <div id="summary-dashboard" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 20px;">
+            <div id="total-missions" class="summary-box" style="background-color: #f1c40f; color: #fff; border-radius: 10px; padding: 20px; flex: 1 1 calc(33% - 20px); box-sizing: border-box; text-align: center;">
+                <strong>Total Missions:</strong> <span id="total-count">0</span>
+            </div>
+            <div id="successful-missions" class="summary-box" style="background-color: #2ecc71; color: #fff; border-radius: 10px; padding: 20px; flex: 1 1 calc(33% - 20px); box-sizing: border-box; text-align: center;">
+                <strong>Successful Missions:</strong> <span id="successful-count">0</span>
+            </div>
+            <div id="unsuccessful-missions" class="summary-box" style="background-color: #e74c3c; color: #fff; border-radius: 10px; padding: 20px; flex: 1 1 calc(33% - 20px); box-sizing: border-box; text-align: center;">
+                <strong>Unsuccessful Missions:</strong> <span id="unsuccessful-count">0</span>
+            </div>
+        </div>
+
+        <!-- Application Pie Chart -->
+        <div class="chart-container">
+            <div class="pie-chart-container" id="application-chart">
+                <!-- Left side: Pie Chart -->
+                <div class="pie-chart-left">
+                    <canvas id="applicationPieChart"></canvas>
+                </div>
+
+                <!-- Right side: JSON Information -->
+                <div class="pie-chart-right">
+                    <div class="json-info" id="json-info"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Missions Per Year Bar Chart -->
+        <div class="chart-container">
+            <div class="bar-chart-container" id="yearly-missions">
+                <!-- Top side: Bar Chart -->
+                <div class="bar-chart-top">
+                    <canvas id="yearlyBarChart"></canvas>
+                </div>
+
+                <!-- Bottom side: JSON Information -->
+                <div class="bar-chart-bottom">
+                    <div class="json-info-bar" id="json-info-bar"></div>
+                </div>
+            </div>
+        </div>
+
+
+<!-- Mission Table inside a Card -->
+<div id="mission-table-card" class="card">
+    <div class="card-header">
+        <h5 class="card-title">Mission Table</h5>
+    </div>
+    <div class="card-body">
+        <table id="missionsTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Mission Name</th>
+                    <th onclick="sortTable(1)">Launch Date</th>
+                    <th onclick="sortTable(2)">Launch Vehicle</th>
+                    <th onclick="sortTable(3)">Orbit Type</th>
+                    <th onclick="sortTable(4)">Application</th>
+                    <th onclick="sortTable(5)">Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <a href="#" id="download-link">Download .json</a>
+</footer>
+
+<script>
+    document.getElementById("file-input").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const jsonData = JSON.parse(e.target.result);
+                displayMissions(jsonData);
+                generateSummary(jsonData);
+                generateApplicationChart(jsonData);
+                generateYearlyChart(jsonData);
+                populateMissionTable(jsonData);
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    function displayMissions(data) {
+        // Display total, successful, and unsuccessful missions
+        generateSummary(data);
+    }
+
+    function generateSummary(data) {
+        let totalMissions = data.length;
+        let successfulMissions = data.filter(m => m.missionStatus === "MISSION SUCCESSFUL").length;
+        let unsuccessfulMissions = data.filter(m => m.missionStatus === "LAUNCH UNSUCCESSFUL").length;
+
+        document.getElementById("total-missions").innerHTML = `<div class="summary-box total-missions">Total Missions: ${totalMissions}</div>`;
+        document.getElementById("successful-missions").innerHTML = `<div class="summary-box successful-missions">Successful Missions: ${successfulMissions}</div>`;
+        document.getElementById("unsuccessful-missions").innerHTML = `<div class="summary-box unsuccessful-missions">Unsuccessful Missions: ${unsuccessfulMissions}</div>`;
+    }
+
+    function generateApplicationChart(data) {
+        const applications = {};
+        data.forEach(mission => {
+            const app = mission.application || "Unknown";
+            applications[app] = (applications[app] || 0) + 1;
+        });
+
+        const labels = Object.keys(applications);
+        const values = Object.values(applications);
+
+        const ctx = document.getElementById("applicationPieChart").getContext("2d");
+        const applicationPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Missions per Application',
+                    data: values,
+                    backgroundColor: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12'],
+                }]
+            },
+            options: {
+                onClick: (e, elements) => {
+                    if (elements.length) {
+                        const clickedIndex = elements[0].index;
+                        const applicationName = labels[clickedIndex];
+                        const filteredMissions = data.filter(m => m.application === applicationName);
+                        const infoDiv = document.getElementById("json-info");
+                        infoDiv.innerHTML = `<pre>${JSON.stringify(filteredMissions, null, 2)}</pre>`;
+                    }
+                }
+            }
+        });
+    }
+
+    function generateYearlyChart(data) {
+        const years = {};
+        data.forEach(mission => {
+            const year = new Date(mission.launchDate).getFullYear();
+            years[year] = (years[year] || 0) + 1;
+        });
+
+        const labels = Object.keys(years);
+        const values = Object.values(years);
+
+        const ctx = document.getElementById("yearlyBarChart").getContext("2d");
+        const yearlyBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Missions per Year',
+                    data: values,
+                    backgroundColor: '#1abc9c',
+                }]
+            },
+            options: {
+                onClick: (e, elements) => {
+                    if (elements.length) {
+                        const clickedIndex = elements[0].index;
+                        const year = labels[clickedIndex];
+                        const filteredMissions = data.filter(m => new Date(m.launchDate).getFullYear() === parseInt(year));
+                        const infoDiv = document.getElementById("json-info-bar");
+                        infoDiv.innerHTML = `<pre>${JSON.stringify(filteredMissions, null, 2)}</pre>`;
+                    }
+                }
+            }
+        });
+    }
+
+    function populateMissionTable(data) {
+        const tableBody = document.querySelector("#missionsTable tbody");
+        tableBody.innerHTML = "";
+        data.forEach(mission => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${mission.name}</td>
+                <td>${mission.launchDate}</td>
+                <td>${mission.launchVehicle}</td>
+                <td>${mission.orbitType}</td>
+                <td>${mission.application}</td>
+                <td>${mission.missionStatus}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Sorting functionality
+    let currentSortOrder = {
+        name: 'asc',
+        launchDate: 'asc',
+        launchVehicle: 'asc',
+        orbitType: 'asc',
+        application: 'asc',
+        status: 'asc'
+    };
+
+    function sortTable(columnIndex) {
+        const table = document.getElementById("missionsTable");
+        const rows = Array.from(table.rows).slice(1);
+        const column = table.rows[0].cells[columnIndex].textContent.trim().toLowerCase();
+        const isAscending = currentSortOrder[column] === 'asc';
+
+        rows.sort((rowA, rowB) => {
+            const cellA = rowA.cells[columnIndex].textContent.trim();
+            const cellB = rowB.cells[columnIndex].textContent.trim();
+
+            if (column === 'launchDate') {
+                return isAscending ? new Date(cellA) - new Date(cellB) : new Date(cellB) - new Date(cellA);
+            }
+
+            if (isAscending) {
+                return cellA > cellB ? 1 : -1;
+            } else {
+                return cellA < cellB ? 1 : -1;
+            }
+        });
+
+        rows.forEach(row => table.appendChild(row));
+
+        currentSortOrder[column] = isAscending ? 'desc' : 'asc';
+    }
+</script>
+
+</body>
+</html>
