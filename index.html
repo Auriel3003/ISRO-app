@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISRO Applications</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to bottom, #005aa7, #fff);
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #003f73;
+            color: white;
+            padding: 20px 10px;
+            text-align: center;
+            width: 95%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        nav button {
+            margin: 0 10px;
+            padding: 12px 25px;
+            border: none;
+            background-color: #005aa7;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav button:hover {
+            background-color: #007ad9;
+            transform: scale(1.1);
+        }
+
+        nav button.active {
+            background-color: #003f73;
+        }
+
+        #content {
+            max-width: 800px;
+            padding: 20px;
+            text-align: left;
+            background-color: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        ul li {
+            padding: 10px;
+            margin: 10px 0;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        ul li:hover {
+            transform: translateY(-5px);
+        }
+
+        .link-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #005aa7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .link-button:hover {
+            background-color: #007ad9;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            margin-top: auto;
+            background-color: #003f73;
+            color: white;
+            padding: 10px;
+            width: 95%;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        footer button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #005aa7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        footer button:hover {
+            background-color: #007ad9;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ISRO Applications</h1>
+    </header>
+
+    <nav>
+        <button class="tab-button active" data-target="launchers">Launchers</button>
+        <button class="tab-button" data-target="spacecrafts">Spacecrafts</button>
+        <button class="tab-button" data-target="customer-satellites">Customer Satellites</button>
+    </nav>
+
+    <div id="content">
+        <div id="launchers" class="section active">
+            <h2>Launchers</h2>
+            <ul>
+                <li>PSLV - Polar Satellite Launch Vehicle</li>
+                <li>GSLV - Geosynchronous Satellite Launch Vehicle</li>
+                <li>GSLV Mk III - Heavy-lift launch vehicle</li>
+                <li>SSLV - Small Satellite Launch Vehicle</li>
+            </ul>
+            <a href="https://www.isro.gov.in/launchers" class="link-button" target="_blank">Learn More About Launchers</a>
+        </div>
+
+        <div id="spacecrafts" class="section">
+            <h2>Spacecrafts</h2>
+            <ul>
+                <li>Chandrayaan-1 - India's first lunar probe</li>
+                <li>Mangalyaan - Mars Orbiter Mission</li>
+                <li>RISAT - Radar Imaging Satellite</li>
+                <li>Cartosat - Series of Earth observation satellites</li>
+            </ul>
+            <a href="https://www.isro.gov.in/spacecraft" class="link-button" target="_blank">Learn More About Spacecrafts</a>
+        </div>
+
+        <div id="customer-satellites" class="section">
+            <h2>Customer Satellites</h2>
+            <ul>
+                <li>HysIS - Hyper Spectral Imaging Satellite for Earth observation</li>
+                <li>TeLEOS-1 - Collaboration with Singapore</li>
+                <li>Amazonia-1 - Collaboration with Brazil</li>
+                <li>NEMO-AM - Collaboration with Italy</li>
+            </ul>
+            <a href="https://www.isro.gov.in/customer-satellites" class="link-button" target="_blank">Learn More About Customer Satellites</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 ISRO Applications Portal</p>
+        <button id="fetch-data">Fetch JSON Data</button>
+    </footer>
+
+    <script>
+        const buttons = document.querySelectorAll('.tab-button');
+        const sections = document.querySelectorAll('.section');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                buttons.forEach(btn => btn.classList.remove('active'));
+
+                // Add active class to clicked button
+                button.classList.add('active');
+
+                // Hide all sections
+                sections.forEach(section => section.classList.remove('active'));
+
+                // Show the target section
+                const target = button.getAttribute('data-target');
+                document.getElementById(target).classList.add('active');
+
+                // Smooth scrolling effect
+                document.getElementById(target).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        document.getElementById('fetch-data').addEventListener('click', () => {
+            const driveUrl = 'https://drive.google.com/uc?export=download&id=YOUR_FILE_ID'; // Replace YOUR_FILE_ID with the actual file ID
+
+            fetch(driveUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Fetched Data:', data);
+                    alert('Data fetched successfully! Check the console for details.');
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    alert('Failed to fetch data. Check the console for errors.');
+                });
+        });
+    </script>
+</body>
+</html>
